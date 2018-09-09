@@ -1,34 +1,55 @@
 import React, { Component } from 'react';
 import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+import axios from 'axios';
 
 class SignUp extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isOpen: false
+            username: '',
+            password: '',
+            email: ''  
         }
+        this.submit = this.submit.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
 
-    submit = () => {
-        console.log('submitted!');
+    handleChange(event){
+        console.log(event.target.value);
+        if(event.target.name === "username"){
+            this.setState({username: event.target.value});
+        }
+        else if(event.target.name === "password"){
+            this.setState({password: event.target.value});
+        }
+        else if(event.target.name === "email"){
+            this.setState({email: event.target.value});
+        }
+        
+    }
+
+    submit(user) {
+        console.log('submitted!' +user);
+        axios.post('http://localhost:5000/api/users', {
+            username: this.state.username,
+            password: this.state.password
+          })
+        
     }
 
     render() {
         return (
-            <Form>
+            <Form className="userForm" onSubmit={ this.submit }>
                 <FormGroup>
-                    <Label for="username">Username</Label>
-                    <Input type="text" name="username" id="uName" placeholder="Username" />
+                    <Input type="text" className="uTinput" name="username" id="username" placeholder="Username" value={ this.state.username } onChange={ this.handleChange } required />
                 </FormGroup>
                 <FormGroup>
-                    <Label for="password">Password</Label>
-                    <Input type="password" name="password" id="pwd" placeholder="Password" />
+                    <Input type="password" className="uTinput" name="password" id="password" placeholder="Password" value={ this.state.password } onChange={ this.handleChange } required/>
                 </FormGroup>
                 <FormGroup>
-                    <Label for="email">Email</Label>
-                    <Input type="email" name="email" id="email" placeholder="Email" />
+                    <Input type="email" className="uTinput" name="email" id="email" placeholder="Email" value={ this.state.email } onChange={ this.handleChange } required/>
                 </FormGroup>
-                <Button onClick = {this.submit}>Submit</Button>
+                <Button type="submit" value="submit">Submit</Button>
             </Form>
         );
     }
